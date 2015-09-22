@@ -1,4 +1,4 @@
-## JJJ Studio Code. 
+## Tk simple pipeline framework 
 
 [TK Simple pipeline's custom codebase](http://blog.shotgunsoftware.com/2015/09/two-men-and-toolkit-start-of-series-of.html)
 
