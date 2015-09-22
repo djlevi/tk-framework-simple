@@ -1,0 +1,52 @@
+# Copyright (c) 2015 Shotgun Software Inc.
+# 
+# CONFIDENTIAL AND PROPRIETARY
+# 
+# This work is provided "AS IS" and subject to the Shotgun Pipeline Toolkit 
+# Source Code License included in this distribution package. See LICENSE.
+# By accessing, using, copying or modifying this work you indicate your 
+# agreement to the Shotgun Pipeline Toolkit Source Code License. All rights 
+# not expressly granted therein are reserved by Shotgun Software Inc.
+
+# ----------------------------------------------------------------------------
+
+# This is the framework's manifest file. For additional information, see:
+#
+#   "For App Developers: Manifest file" section on this page:
+#        https://support.shotgunsoftware.com/entries/95442678
+
+configuration:
+    # Configuration settings definitions
+
+requires_shotgun_fields:
+    # Shotgun fields that this app expects
+
+# List of engines with which this app works (optional)
+#supported_engines: ["tk-nuke", "tk-maya"]
+
+# List of frameworks which are needed to run the app (optional)
+#frameworks:
+#    - {"name": "tk-framework-widget", "version": "v0.1.2"}
+#    - {"name": "tk-framework-tools", "version": "v0.x.x"}
+
+# More verbose description of this item
+display_name: "Nicely formatted name"
+description: "One line description of what the app does."
+
+# optional url links to documentation and support
+#documentation_url: "http://intranet/path/to/sgtk_app_docs.html"
+#support_url: "http://intranet/pipeline_team/support.html"
+
+# Required minimum versions for this item to run
+#requires_shotgun_version: 
+#requires_core_verson: "v0.16.22"
+
+# what operating systems are supported?
+# leaving this out, or blank means that all operating systems
+# are supported. Valid choices are windows, linux and mac
+#supported_platforms: ["windows", "linux"]
+
+# what parts of the context are required for this app?
+# possible choices are project, entity, step, task, user
+#required_context: ["project", "entity", "user"]
+
