@@ -18,6 +18,7 @@ import os
 import pymel.core as pm
 import maya.cmds as cmds
 import maya.mel as mel
+from sgtk.platform.qt import QtGui
 
 HookBaseClass = sgtk.get_hook_baseclass()
 
@@ -110,15 +111,20 @@ class MayaActions(HookBaseClass):
         app = self.parent
         app.log_debug("Execute action called for action %s. "
                       "Parameters: %s. Publish Data: %s" % (name, params, sg_publish_data))
+
+        simple_framework = self.load_framework("tk-framework-simple_v0.x.x")
+        utils = simple_framework.import_module("utils")
         
         # resolve path
         path = self.get_publish_path(sg_publish_data)
         
         if name == "reference":
-            self._create_reference(path, sg_publish_data)
+            if not utils.is_deprecated(sg_publish_data) or self._confirm_action_on_deprecated("reference"):
+                self._create_reference(path, sg_publish_data)
 
         if name == "import":
-            self._do_import(path, sg_publish_data)
+            if not utils.is_deprecated(sg_publish_data) or self._confirm_action_on_deprecated("import"):
+                self._do_import(path, sg_publish_data)
         
         if name == "texture_node":
             self._create_texture_node(path, sg_publish_data)
@@ -129,6 +135,29 @@ class MayaActions(HookBaseClass):
            
     ##############################################################################################################
     # helper methods which can be subclassed in custom hooks to fine tune the behaviour of things
+
+    def _confirm_action_on_deprecated(self, action_name):
+        """
+        Confirms that the user really wants to do an action on a deprecated file.
+
+        :param action_name: The name of the action requested.
+        :returns:           If the action should be done or not
+        """
+        box = QtGui.QMessageBox()
+        box.setText("Loading a Deprecated File")
+        box.setInformativeText(
+                "You are about to %s a deprecated file. Do you really want to %s it?" %
+                (action_name, action_name))
+        box.setIcon(QtGui.QMessageBox.Warning)
+
+        accept = box.addButton(action_name.capitalize(), QtGui.QMessageBox.YesRole)
+        cancel = box.addButton(QtGui.QMessageBox.Cancel)
+
+        box.setDefaultButton(cancel)
+
+        box.exec_()
+
+        return box.clickedButton() == accept
     
     def _create_reference(self, path, sg_publish_data):
         """
