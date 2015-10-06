@@ -262,7 +262,7 @@ def _hookup_shaders(reference_node):
         shader = cmds.scriptNode(node, query=True, beforeScript=True)
         shader_hookups[obj_pattern] = shader
         
-    for node in cmds.referenceQuery(reference_node, nodes=True):
+    for node in (cmds.referenceQuery(reference_node, nodes=True) or []):
         for (obj_pattern, shader) in shader_hookups.iteritems():
             if re.match(obj_pattern, node, re.IGNORECASE):
                 # assign the shader to the object
