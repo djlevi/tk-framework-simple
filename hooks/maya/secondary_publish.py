@@ -229,7 +229,12 @@ class PublishHook(Hook):
             "dependency_paths": [primary_publish_path],
             "published_file_type":tank_type
         }
-        tank.util.register_publish(**args)
+
+        # Register the publish, but also stash the data returned from
+        # Shotgun so that we have a record of the PublishFile entry
+        # to make use of in the post_publish hook. <jbee>
+        sg_data = tank.util.register_publish(**args)
+        item['sg_data'] = sg_data
 
     def __publish_camera(self, item, output, work_template,
         primary_publish_path, sg_task, comment, thumbnail_path, progress_cb):
