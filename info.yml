@@ -25,9 +25,8 @@ requires_shotgun_fields:
 #supported_engines: ["tk-nuke", "tk-maya"]
 
 # List of frameworks which are needed to run the app (optional)
-#frameworks:
-#    - {"name": "tk-framework-widget", "version": "v0.1.2"}
-#    - {"name": "tk-framework-tools", "version": "v0.x.x"}
+frameworks:
+    - {"name": "tk-framework-shotgunutils", "version": "v2.x.x"}
 
 # More verbose description of this item
 display_name: "Nicely formatted name"
