@@ -13,8 +13,8 @@ from sgtk import Hook
 
 class FilterPublishes(Hook):
     """
-    Hook that can be used to filter the list of publishes returned from
-    Shotgun for the current location.
+    Hook that can be used to filter the list of publishes returned from Shotgun
+    for the current location.
     """
 
     def execute(self, publishes, **kwargs):
@@ -33,7 +33,8 @@ class FilterPublishes(Hook):
 
 
         :returns:            The filtered list of dictionaries of the same form
-                             as the input 'publishes' list
+                             as the input 'publishes'
+                             list
         """
         app = self.parent
         shotgun_utils = self.load_framework(

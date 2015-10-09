@@ -69,14 +69,21 @@ class MayaActions(HookBaseClass):
                       "Actions: %s. Publish Data: %s" % (ui_area, actions, sg_publish_data))
         
         action_instances = []
+
+        simple_framework = self.load_framework(self._FRAMEWORK_SIMPLE_NAME)
+        utils = simple_framework.import_module("utils")
+
+        deprecated_actions_disabled = app.get_setting("disable_deprecated_files_actions", False)
+        actions_disabled = (deprecated_actions_disabled and
+                            utils.is_deprecated(sg_publish_data))
         
-        if "reference" in actions:
+        if "reference" in actions and not actions_disabled:
             action_instances.append( {"name": "reference", 
                                       "params": None,
                                       "caption": "Create Reference", 
                                       "description": "This will add the item to the scene as a standard reference."} )
 
-        if "import" in actions:
+        if "import" in actions and not actions_disabled:
             action_instances.append( {"name": "import", 
                                       "params": None,
                                       "caption": "Import into Scene", 
@@ -112,7 +119,7 @@ class MayaActions(HookBaseClass):
         app.log_debug("Execute action called for action %s. "
                       "Parameters: %s. Publish Data: %s" % (name, params, sg_publish_data))
 
-        simple_framework = self.load_framework("tk-framework-simple_v0.x.x")
+        simple_framework = self.load_framework(self._FRAMEWORK_SIMPLE_NAME)
         utils = simple_framework.import_module("utils")
         
         # resolve path
@@ -135,6 +142,8 @@ class MayaActions(HookBaseClass):
            
     ##############################################################################################################
     # helper methods which can be subclassed in custom hooks to fine tune the behaviour of things
+
+    _FRAMEWORK_SIMPLE_NAME = "tk-framework-simple_v0.x.x"
 
     def _confirm_action_on_deprecated(self, action_name):
         """
