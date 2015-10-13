@@ -164,14 +164,16 @@ class PrimaryPublishHook(Hook):
 
         # finally, register the publish:
         progress_cb(75.0, "Registering the publish")
-        self._register_publish(publish_path, 
-                               publish_name, 
-                               sg_task, 
-                               fields["version"], 
-                               output["tank_type"],
-                               comment,
-                               thumbnail_path, 
-                               dependencies)
+        sg_data = self._register_publish(
+            publish_path, 
+            publish_name, 
+            sg_task, 
+            fields["version"], 
+            output["tank_type"],
+            comment,
+            thumbnail_path, 
+            dependencies,
+        )
         
         progress_cb(100)
         

@@ -121,23 +121,43 @@ class MayaActions(HookBaseClass):
 
         simple_framework = self.load_framework(self._FRAMEWORK_SIMPLE_NAME)
         utils = simple_framework.import_module("utils")
-        
-        # resolve path
-        path = self.get_publish_path(sg_publish_data)
-        
-        if name == "reference":
-            if not utils.is_deprecated(sg_publish_data) or self._confirm_action_on_deprecated("reference"):
-                self._create_reference(path, sg_publish_data)
 
-        if name == "import":
-            if not utils.is_deprecated(sg_publish_data) or self._confirm_action_on_deprecated("import"):
-                self._do_import(path, sg_publish_data)
-        
-        if name == "texture_node":
-            self._create_texture_node(path, sg_publish_data)
+        # Handle groups recursively. <jbee>
+        if sg_publish_data["published_file_type"]["name"].lower() == "group":
+            child_data = self.parent.shotgun.find_one(
+                "PublishedFile",
+                [["id", "is", sg_publish_data["id"]]],
+                fields=["sg_children"],
+            )
+            for child in child_data["sg_children"]:
+                # We need to make sure we provide the same data from SG
+                # for the children that is typically given, so we'll query
+                # the list of fields that came with the parent group. This
+                # will travel down the tree as we recurse in the event of
+                # groups nested inside of groups.
+                child_expanded = self.parent.shotgun.find_one(
+                    "PublishedFile",
+                    [['id', 'is', child['id']]],
+                    fields=sg_publish_data.keys(),
+                )
+                self.execute_action(name, params, child_expanded)
+        else:
+            # resolve path
+            path = self.get_publish_path(sg_publish_data)
             
-        if name == "udim_texture_node":
-            self._create_udim_texture_node(path, sg_publish_data)
+            if name == "reference":
+                if not utils.is_deprecated(sg_publish_data) or self._confirm_action_on_deprecated("reference"):
+                    self._create_reference(path, sg_publish_data)
+
+            if name == "import":
+                if not utils.is_deprecated(sg_publish_data) or self._confirm_action_on_deprecated("import"):
+                    self._do_import(path, sg_publish_data)
+            
+            if name == "texture_node":
+                self._create_texture_node(path, sg_publish_data)
+                
+            if name == "udim_texture_node":
+                self._create_udim_texture_node(path, sg_publish_data)
                         
            
     ##############################################################################################################
@@ -271,7 +291,7 @@ def _hookup_shaders(reference_node):
         shader = cmds.scriptNode(node, query=True, beforeScript=True)
         shader_hookups[obj_pattern] = shader
         
-    for node in cmds.referenceQuery(reference_node, nodes=True):
+    for node in (cmds.referenceQuery(reference_node, nodes=True) or []):
         for (obj_pattern, shader) in shader_hookups.iteritems():
             if re.match(obj_pattern, node, re.IGNORECASE):
                 # assign the shader to the object

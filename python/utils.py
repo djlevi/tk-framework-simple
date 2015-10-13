@@ -21,4 +21,4 @@ def is_deprecated(published_file):
                             boolean
     """
 
-    return published_file['sg_status_list'] == 'dprctd'
+    return published_file.get('sg_status_list') == 'dprctd'

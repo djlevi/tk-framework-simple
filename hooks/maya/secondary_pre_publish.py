@@ -90,6 +90,8 @@ class PrePublishHook(Hook):
                 errors.extend(self.__validate_item_for_camera(item))
             elif output["name"] == "maya_shader_network":
                 errors.extend(self.__validate_item_for_maya_shader_network_publish(item))
+            elif output["name"] == "rendered_image":
+                errors.extend(self.__validate_item_for_rendered_image_publish(item))
             else:
                 # don't know how to publish this output types!
                 errors.append("Don't know how to publish this item!")            
@@ -148,6 +150,24 @@ class PrePublishHook(Hook):
         """
 
         # add error checking here!
+        errors = []
+
+        return errors    
+
+    # validate rendered images...
+    def __validate_item_for_rendered_image_publish(self, item):
+        """
+        Validate that the item is valid to be exported as a rendered image
+        
+        :param item:    The item to validate
+        :returns:       A list of any errors found during validation that should be reported
+                        to the artist
+        """
+
+        # add error checking here. here you can validate the rendered images in
+        # whatever way you need to. right number of frames, no missing frames,
+        # able to generate a thumbnail, all expected layers present, whatever
+        # else you need.
         errors = []
 
         return errors    
