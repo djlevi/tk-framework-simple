@@ -303,6 +303,4 @@ def _hookup_shaders(reference_node):
                 cmds.file(unloadReference=reference_node)
                 cmds.setAttr(reference_node + ".locked", True)
                 cmds.file(loadReference=reference_node)
-            else:
-                print "NODE: " + node + " doesn't match " + obj_pattern
                 
